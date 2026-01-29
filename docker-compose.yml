@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  # Frontend - Next.js Static Export with Nginx
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8002
+    ports:
+      - "3005:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8002
+    depends_on:
+      - backend
+    networks:
+      - reapublix-network
+    restart: unless-stopped
+
+  # Backend - Express.js API Server
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - DATABASE_URL=mysql://reapublix_user:reapublix_password@mysql:3306/reapublix
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=reapublix-super-secret-jwt-key-change-in-production
+      - JWT_EXPIRES_IN=7d
+      - CORS_ORIGIN=*
+      - PORT=8000
+      - NODE_ENV=development
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - reapublix-network
+    restart: unless-stopped
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - /app/dist
+
+  # Database - MySQL 8.0
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3310:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=reapublix
+      - MYSQL_USER=reapublix_user
+      - MYSQL_PASSWORD=reapublix_password
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./backend/prisma/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - reapublix-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Redis - Caching Layer
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6381:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - reapublix-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # RSS Worker - Background job for fetching feeds
+  rss-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.worker
+    env_file:
+      - ./backend/.env
+    environment:
+      - DATABASE_URL=mysql://reapublix_user:reapublix_password@mysql:3306/reapublix
+      - REDIS_URL=redis://redis:6379
+      - NODE_ENV=development
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - reapublix-network
+    restart: unless-stopped
+
+networks:
+  reapublix-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  redis-data:

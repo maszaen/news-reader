@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  displayName  String?  @map("display_name")
+  avatarUrl    String?  @map("avatar_url")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  likes        UserLike[]
+  bookmarks    UserBookmark[]
+  views        ArticleView[]
+
+  @@map("users")
+}
+
+model Feed {
+  id              String    @id @default(uuid())
+  feedUrl         String    @unique @map("feed_url")
+  title           String
+  displayName     String    @map("display_name")
+  description     String?   @db.Text
+  category        String    @default("news")
+  websiteUrl      String?   @map("website_url")
+  logoUrl         String?   @map("logo_url")
+  refreshInterval Int       @default(3600) @map("refresh_interval")
+  isActive        Boolean   @default(true) @map("is_active")
+  lastFetchedAt   DateTime? @map("last_fetched_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  articles        Article[]
+
+  @@index([category])
+  @@index([isActive])
+  @@map("feeds")
+}
+
+model Article {
+  id           String   @id @default(uuid())
+  feedId       String   @map("feed_id")
+  feed         Feed     @relation(fields: [feedId], references: [id], onDelete: Cascade)
+  title        String   @db.VarChar(500)
+  content      String?  @db.Text
+  summary      String?  @db.VarChar(1000)
+  url          String   @unique
+  author       String?
+  category     String?  @default("news")
+  imageUrl     String?  @map("image_url") @db.VarChar(2048)
+  publishedAt  DateTime @map("published_at")
+  providerName String?  @map("provider_name")
+  providerUrl  String?  @map("provider_url")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  analytics    ArticleAnalytics?
+  views        ArticleView[]
+  likes        UserLike[]
+  bookmarks    UserBookmark[]
+
+  @@index([feedId])
+  @@index([publishedAt])
+  @@index([category])
+  @@map("articles")
+}
+
+model ArticleAnalytics {
+  id            String   @id @default(uuid())
+  articleId     String   @unique @map("article_id")
+  article       Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  viewCount     Int      @default(0) @map("view_count")
+  likeCount     Int      @default(0) @map("like_count")
+  bookmarkCount Int      @default(0) @map("bookmark_count")
+  shareCount    Int      @default(0) @map("share_count")
+  popularityScore Float  @default(0) @map("popularity_score")
+  lastViewedAt  DateTime @default(now()) @map("last_viewed_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([popularityScore])
+  @@map("article_analytics")
+}
+
+model UserLike {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  articleId String   @map("article_id")
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, articleId])
+  @@map("user_likes")
+}
+
+model UserBookmark {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  articleId String   @map("article_id")
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  notes     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, articleId])
+  @@map("user_bookmarks")
+}
+
+model ArticleView {
+  id            String   @id @default(uuid())
+  articleId     String   @map("article_id")
+  article       Article  @relation(fields: [articleId], references: [id])
+  userId        String?  @map("user_id")
+  user          User?    @relation(fields: [userId], references: [id])
+  ipHash        String?  @map("ip_hash")
+  userAgentHash String?  @map("user_agent_hash")
+  viewedAt      DateTime @default(now()) @map("viewed_at")
+
+  @@index([articleId])
+  @@index([userId])
+  @@map("article_views")
+}
