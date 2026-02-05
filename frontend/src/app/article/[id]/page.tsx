@@ -110,7 +110,7 @@ export default function ArticlePage() {
 
   if (isLoading) {
     return (
-      <div className="container-readable py-8">
+      <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="animate-pulse space-y-6">
           <div className="h-8 w-32 skeleton rounded" />
           <div className="h-64 skeleton rounded-2xl" />
@@ -129,15 +129,15 @@ export default function ArticlePage() {
 
   if (error || !article) {
     return (
-      <div className="container-readable py-8">
-        <Link href="/" className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:underline mb-6">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <Link href="/" className="inline-flex items-center gap-2 text-blue-600 hover:underline mb-6 font-medium">
           <ArrowLeft className="w-4 h-4" />
           Back to Home
         </Link>
         
-        <div className="text-center py-12 glass-card">
+        <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold mb-2">Article not found</h2>
-          <p className="text-text-secondary-light dark:text-text-secondary-dark">
+          <p className="text-gray-500 dark:text-gray-400">
             The article you're looking for doesn't exist or has been removed.
           </p>
         </div>
@@ -146,11 +146,11 @@ export default function ArticlePage() {
   }
 
   return (
-    <article className="container-readable py-8">
+    <article className="max-w-4xl mx-auto px-4 py-8">
       {/* Back Button */}
       <Link 
         href="/" 
-        className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:underline mb-6"
+        className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline mb-6 font-medium"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Home
@@ -158,11 +158,11 @@ export default function ArticlePage() {
 
       {/* Hero Image */}
       {article.imageUrl && (
-        <div className="relative -mx-4 sm:mx-0 mb-6 rounded-2xl overflow-hidden">
+        <div className="relative -mx-4 sm:mx-0 mb-8 rounded-2xl overflow-hidden shadow-lg">
           <img
             src={article.imageUrl}
             alt={article.title}
-            className="w-full h-64 sm:h-80 object-cover"
+            className="w-full h-64 sm:h-96 object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
         </div>
@@ -170,46 +170,46 @@ export default function ArticlePage() {
 
       {/* Category Badge */}
       {article.category && (
-        <span className={cn('badge mb-4', getCategoryClass(article.category))}>
+        <span className={cn('inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border mb-6 uppercase tracking-wider', getCategoryClass(article.category))}>
           {article.category}
         </span>
       )}
 
       {/* Title */}
-      <h1 className="text-3xl sm:text-4xl font-bold mb-4 leading-tight">
+      <h1 className="text-3xl sm:text-5xl font-bold mb-6 leading-tight text-gray-900 dark:text-gray-50">
         {article.title}
       </h1>
 
       {/* Meta Info */}
-      <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary-light dark:text-text-secondary-dark mb-6">
+      <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 dark:text-gray-400 mb-8 pb-8 border-b border-gray-200 dark:border-gray-800">
         {/* Provider - Always visible */}
         <a 
           href={article.providerUrl || article.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 font-medium text-primary-600 dark:text-primary-400 hover:underline"
+          className="flex items-center gap-2 font-bold text-blue-600 dark:text-blue-400 hover:underline"
         >
           <Newspaper className="w-4 h-4" />
-          Source: {article.providerName}
+          {article.providerName}
         </a>
         
         {/* Author */}
         {article.author && (
-          <span className="flex items-center gap-1.5">
+          <span className="flex items-center gap-2 font-medium">
             <User className="w-4 h-4" />
             {article.author}
           </span>
         )}
         
         {/* Date */}
-        <span className="flex items-center gap-1.5">
+        <span className="flex items-center gap-2 font-medium">
           <Clock className="w-4 h-4" />
           {formatDate(article.publishedAt)}
         </span>
         
         {/* Views */}
         {article.analytics && (
-          <span className="flex items-center gap-1.5">
+          <span className="flex items-center gap-2 font-medium">
             <Eye className="w-4 h-4" />
             {formatNumber(article.analytics.viewCount)} views
           </span>
@@ -217,20 +217,22 @@ export default function ArticlePage() {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center gap-2 pb-6 mb-6 border-b border-gray-200 dark:border-gray-700">
+      <div className="grid grid-cols-3 gap-2 mb-8 sticky top-20 z-10 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl p-2 rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-sm w-full sm:w-[480px]">
         {/* Like */}
         <button
           onClick={handleLike}
           disabled={!user}
           className={cn(
-            'btn-secondary gap-2',
-            isLiked && 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
+            'flex items-center justify-center gap-2 px-2 py-2.5 rounded-lg font-bold transition-all active:scale-95 w-full',
+            isLiked 
+              ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400' 
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700',
             !user && 'opacity-50 cursor-not-allowed'
           )}
           title={user ? (isLiked ? 'Unlike' : 'Like') : 'Sign in to like'}
         >
           <Heart className={cn('w-4 h-4', isLiked && 'fill-current')} />
-          {likeCount > 0 && formatNumber(likeCount)}
+          <span>{likeCount > 0 ? formatNumber(likeCount) : (isLiked ? 'Liked' : 'Like')}</span>
         </button>
 
         {/* Bookmark */}
@@ -238,31 +240,33 @@ export default function ArticlePage() {
           onClick={handleBookmark}
           disabled={!user}
           className={cn(
-            'btn-secondary gap-2',
-            isBookmarked && 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400',
+            'flex items-center justify-center gap-2 px-2 py-2.5 rounded-lg font-bold transition-all active:scale-95 w-full',
+            isBookmarked 
+              ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' 
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700',
             !user && 'opacity-50 cursor-not-allowed'
           )}
           title={user ? (isBookmarked ? 'Remove bookmark' : 'Bookmark') : 'Sign in to bookmark'}
         >
           <Bookmark className={cn('w-4 h-4', isBookmarked && 'fill-current')} />
-          {isBookmarked ? 'Saved' : 'Save'}
+          <span>{isBookmarked ? 'Saved' : 'Save'}</span>
         </button>
 
         {/* Share */}
         <button
           onClick={handleShare}
-          className="btn-secondary gap-2"
+          className="flex items-center justify-center gap-2 px-2 py-2.5 rounded-lg font-bold transition-all active:scale-95 w-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
         >
           <Share2 className="w-4 h-4" />
-          Share
+          <span>Share</span>
         </button>
       </div>
 
       {/* Summary */}
       {article.summary && (
-        <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border-l-4 border-primary-500">
-          <p className="text-lg text-text-secondary-light dark:text-text-secondary-dark italic">
-            {article.summary}
+        <div className="mb-10 p-6 bg-blue-50/50 dark:bg-blue-900/10 rounded-2xl border border-blue-100 dark:border-blue-900/20">
+          <p className="text-xl leading-relaxed text-gray-700 dark:text-gray-300 font-medium italic text-justify">
+            "{article.summary}"
           </p>
         </div>
       )}
@@ -270,23 +274,23 @@ export default function ArticlePage() {
       {/* Content */}
       {article.content && (
         <div 
-          className="prose prose-lg dark:prose-invert max-w-none mb-8"
+          className="prose prose-lg dark:prose-invert max-w-none mb-12 prose-headings:font-bold prose-headings:tracking-tight prose-p:text-gray-600 dark:prose-p:text-gray-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-img:rounded-xl text-justify leading-loose prose-p:mb-6 prose-li:my-2"
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
       )}
 
       {/* Read Original CTA */}
-      <div className="p-6 glass-card text-center">
-        <p className="text-text-secondary-light dark:text-text-secondary-dark mb-4">
+      <div className="p-8 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 text-center">
+        <p className="text-gray-600 dark:text-gray-400 mb-6 text-lg font-medium">
           Read the full article on {article.providerName}
         </p>
         <a
           href={article.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-primary inline-flex"
+          className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-blue-500/25 active:scale-95 text-lg"
         >
-          <ExternalLink className="w-4 h-4" />
+          <ExternalLink className="w-5 h-5" />
           Read on {article.providerName}
         </a>
       </div>

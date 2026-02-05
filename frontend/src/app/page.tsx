@@ -92,7 +92,7 @@ function HomeContent() {
   const selectedCategory = categories.find(c => c.id === categoryParam);
 
   return (
-    <div className="container-wide py-6">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Categories */}
       <section className="mb-6">
         {categories.length === 0 ? (
@@ -210,7 +210,7 @@ function HomeContent() {
 export default function Home() {
   return (
     <Suspense fallback={
-      <div className="container-wide py-6">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <CategoryListSkeleton />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           {Array.from({ length: 6 }).map((_, i) => (

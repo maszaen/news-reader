@@ -50,17 +50,19 @@ export function TrendingSection({ articles, isLoading }: TrendingSectionProps) {
         </span>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:h-[28rem]">
         {/* Featured Article */}
         {featured && (
-          <ArticleCard article={featured} variant="featured" />
+          <div className="h-full">
+            <ArticleCard article={featured} variant="featured" />
+          </div>
         )}
         
         {/* Rest of trending */}
-        <div className="space-y-1">
+        <div className="flex flex-col justify-between gap-3 h-full overflow-hidden">
           {rest.slice(0, 4).map((article, index) => (
-            <div key={article.id} className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark">
+            <div key={article.id} className="flex-1 flex items-center gap-4 group/item p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-700/50">
+              <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-sm font-bold text-gray-500 border border-gray-200 dark:border-gray-700">
                 {index + 2}
               </span>
               <div className="flex-1 min-w-0">

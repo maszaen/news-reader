@@ -11,35 +11,32 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
+          DEFAULT: 'var(--primary)',
           50: '#EBF3FE',
           100: '#D7E7FD',
           200: '#AFCFFB',
           300: '#87B7F9',
           400: '#5F9FF7',
-          500: '#4285F4', // Google Blue
+          500: '#2563EB', // Updated to Zinc/Slate Blue
           600: '#1A73E8',
           700: '#1557B0',
           800: '#104080',
           900: '#0B2A50',
         },
-        surface: {
-          light: '#F8F9FA',
-          dark: '#292A2D',
-        },
-        background: {
-          light: '#FFFFFF',
-          dark: '#202124',
-        },
+        surface: 'var(--surface)',
+        background: 'var(--background)',
+        border: 'var(--border)',
         text: {
-          light: '#202124',
+          DEFAULT: 'var(--text-primary)',
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          light: '#202124', // Fallbacks
           dark: '#E8EAED',
-          'secondary-light': '#5F6368',
-          'secondary-dark': '#9AA0A6',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-space-grotesk)', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.1)',
@@ -81,7 +78,9 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 };
 
 export default config;

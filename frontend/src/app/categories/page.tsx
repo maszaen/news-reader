@@ -25,7 +25,7 @@ export default function CategoriesPage() {
   }, []);
 
   return (
-    <div className="container-wide py-8">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="mb-8">
         <Link 

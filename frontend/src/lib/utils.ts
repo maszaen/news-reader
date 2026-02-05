@@ -37,14 +37,14 @@ export function truncateText(text: string, maxLength: number): string {
 
 export function getCategoryClass(category: string): string {
   const classes: Record<string, string> = {
-    news: 'category-news',
-    technology: 'category-technology',
-    finance: 'category-finance',
-    sports: 'category-sports',
-    entertainment: 'category-entertainment',
-    science: 'category-science',
-    health: 'category-health',
-    business: 'category-business',
+    news: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+    technology: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+    finance: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
+    sports: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300',
+    entertainment: 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300',
+    science: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
+    health: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300',
+    business: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300',
   };
-  return classes[category] || 'badge-secondary';
+  return classes[category.toLowerCase()] || 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300';
 }

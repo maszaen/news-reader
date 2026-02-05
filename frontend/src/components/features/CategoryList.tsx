@@ -94,14 +94,14 @@ export function CategoryList({
 
   // Horizontal (default)
   return (
-    <div className="flex gap-2 overflow-x-auto hide-scrollbar py-2">
+    <div className="flex gap-2 overflow-x-auto hide-scrollbar py-4 -my-2 mask-linear">
       <Link
         href="/"
         className={cn(
-          'flex-shrink-0 px-4 py-2 rounded-full font-medium text-sm transition-all',
+          'flex-shrink-0 px-4 py-1.5 rounded-full font-medium text-sm transition-all border',
           !selectedCategory
-            ? 'bg-primary-500 text-white shadow-md'
-            : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+            ? 'bg-primary text-white border-primary shadow-sm'
+            : 'bg-white dark:bg-gray-900 text-text-secondary border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
         )}
       >
         All
@@ -115,12 +115,12 @@ export function CategoryList({
             key={category.id}
             href={`/?category=${category.id}`}
             className={cn(
-              'flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full font-medium text-sm transition-all',
+              'flex-shrink-0 flex items-center gap-2 px-3.5 py-1.5 rounded-full font-medium text-sm transition-all border',
               isSelected
-                ? 'text-white shadow-md'
-                : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+                ? 'text-white border-transparent shadow-sm'
+                : 'bg-white dark:bg-gray-900 text-text-secondary border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
             )}
-            style={isSelected ? { backgroundColor: category.color } : undefined}
+            style={isSelected ? { backgroundColor: category.color, borderColor: category.color } : undefined}
           >
             {categoryIcons[category.icon]}
             {category.label}
@@ -138,7 +138,7 @@ function CategoryCard({ category }: { category: Category }) {
   return (
     <Link
       href={`/?category=${category.id}`}
-      className="glass-card-hover p-5 text-center group"
+      className="group block p-5 text-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl hover:shadow-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all"
     >
       <div 
         className="w-12 h-12 mx-auto mb-3 rounded-xl flex items-center justify-center text-white transition-transform group-hover:scale-110"
@@ -163,7 +163,7 @@ export function CategoryListSkeleton({ variant = 'horizontal' }: { variant?: 'ho
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="glass-card p-5 space-y-3">
+          <div key={i} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 space-y-3">
             <div className="w-12 h-12 mx-auto skeleton rounded-xl" />
             <div className="h-4 w-20 mx-auto skeleton" />
             <div className="h-3 w-16 mx-auto skeleton" />

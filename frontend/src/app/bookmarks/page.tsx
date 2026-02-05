@@ -52,7 +52,7 @@ export default function BookmarksPage() {
 
   if (authLoading) {
     return (
-      <div className="container-wide py-8">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <ArticleCardSkeleton key={i} />
@@ -67,7 +67,7 @@ export default function BookmarksPage() {
   }
 
   return (
-    <div className="container-wide py-8">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -96,13 +96,13 @@ export default function BookmarksPage() {
           ))}
         </div>
       ) : articles.length === 0 ? (
-        <div className="text-center py-16 glass-card">
+        <div className="text-center py-16 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl">
           <Bookmark className="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
           <h2 className="text-xl font-semibold mb-2">No bookmarks yet</h2>
           <p className="text-text-secondary-light dark:text-text-secondary-dark mb-6">
             Save articles to read them later. Your bookmarks will appear here.
           </p>
-          <Link href="/" className="btn-primary inline-flex">
+          <Link href="/" className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-colors bg-blue-600 hover:bg-blue-700 text-white shadow-md">
             Browse Articles
           </Link>
         </div>
@@ -127,7 +127,7 @@ export default function BookmarksPage() {
                   onClick={() => setPage(i + 1)}
                   className={`w-10 h-10 rounded-lg font-medium transition-colors ${
                     page === i + 1
-                      ? 'bg-primary-500 text-white'
+                      ? 'bg-blue-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
                   }`}
                 >
